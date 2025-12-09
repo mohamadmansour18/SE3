@@ -2,7 +2,7 @@
 
 namespace App\Services\Contracts;
 
-interface ProfileServiceInterface
+interface AccountServiceInterface
 {
 
 }

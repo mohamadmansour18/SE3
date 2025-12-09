@@ -62,29 +62,9 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function staffProfile(): HasOne
-    {
-        return $this->hasOne(StaffProfile::class , 'user_id' , 'id');
-    }
-
     public function citizenProfile(): HasOne
     {
         return $this->hasOne(CitizenProfile::class , 'user_id' , 'id');
-    }
-
-    public function citizenComplaints(): HasMany
-    {
-        return $this->hasMany(Complaint::class , 'citizen_id' , 'id');
-    }
-
-    public function officerComplaints(): HasMany
-    {
-        return $this->hasMany(Complaint::class , 'assigned_officer_id' , 'id');
-    }
-
-    public function attachments(): HasMany
-    {
-        return $this->hasMany(Attachment::class , 'uploaded_by' , 'id');
     }
 
     public function auditLogs(): HasMany
@@ -105,5 +85,15 @@ class User extends Authenticatable implements JWTSubject
     public function fcmTokens(): HasMany
     {
         return $this->hasMany(FcmToken::class , 'user_id' , 'id');
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class , 'user_id' , 'id');
+    }
+
+    public function transactionsPerformed(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'performed_by_user_id');
     }
 }

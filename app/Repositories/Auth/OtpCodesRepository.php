@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Auth;
 
-use App\Enums\OtpCodePurpose;
 use App\Models\OtpCodes;
 use Illuminate\Database\Eloquent\Model;
 

@@ -11,7 +11,7 @@ use App\Services\Contracts\AuthServiceInterface;
 use App\Traits\AspectTrait;
 use Illuminate\Support\Facades\Auth;
 
-class AuthServiceAspect implements AuthServiceInterface
+class AuthServiceProxy implements AuthServiceInterface
 {
     use AspectTrait;
 
@@ -70,7 +70,7 @@ class AuthServiceAspect implements AuthServiceInterface
         return [
             'token' => $result['token'],
             'expires_in' => $result['expires_in'],
-            'name' => TextHelper::fixBidi("مرحبا صديقي المواطن {$result['user']->name}")
+            'name' => TextHelper::fixBidi("مرحبا صديقي المستخدم {$result['user']->name}")
         ];
     }
 

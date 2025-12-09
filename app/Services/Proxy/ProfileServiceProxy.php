@@ -2,13 +2,10 @@
 
 namespace App\Services\Proxy;
 
-use App\Models\User;
 use App\Services\Contracts\ProfileServiceInterface;
 use App\Traits\AspectTrait;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
 
-class ProfileServiceAspect implements ProfileServiceInterface
+class ProfileServiceProxy implements ProfileServiceInterface
 {
     use AspectTrait ;
 

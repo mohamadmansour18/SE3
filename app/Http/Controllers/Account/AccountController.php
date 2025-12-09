@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Profiles_Domain;
+namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
 
-class CitizenProfileController extends Controller
+class AccountController extends Controller
 {
     use ApiResponse;
 }
