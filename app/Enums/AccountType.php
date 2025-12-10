@@ -7,8 +7,8 @@ enum AccountType: string
 {
     use EnumToArray;
 
-    case CHECKING = 'checking';
-    case SAVING = 'saving';
-    case LOAN = 'loan';
-    case INVESTMENT = 'investment';
+    case CHECKING = 'جاري';
+    case SAVING = 'توفير';
+    case LOAN = 'قرض';
+    case INVESTMENT = 'استثماري';
 }

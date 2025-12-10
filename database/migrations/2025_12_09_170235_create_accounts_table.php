@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('name', 100);
+            $table->text('description');
             $table->string('account_number')->unique();
             $table->enum('type' , [AccountType::convertEnumToArray()])->default(AccountType::CHECKING->value);
             $table->enum('status' , [AccountStatus::convertEnumToArray()])->default(AccountStatus::ACTIVE->value);

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('account_id')->constrained('accounts')->cascadeOnDelete();
             $table->foreignId('to_account_id')->nullable()->constrained('accounts')->cascadeOnDelete();
+            $table->string('name', 100);
             $table->enum('type' , [ScheduledTransactionType::convertEnumToArray()]);
             $table->decimal('amount', 15, 2);
             $table->enum('frequency' , [ScheduledTransactionFrequency::convertEnumToArray()])->default(ScheduledTransactionFrequency::MONTHLY->value);

@@ -8,12 +8,12 @@ use App\Jobs\SendOtpCode;
 
 use App\Models\User;
 use App\Services\Contracts\AuthServiceInterface;
-use App\Traits\AspectTrait;
+use App\Traits\AroundTrait;
 use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProxy implements AuthServiceInterface
 {
-    use AspectTrait;
+    use AroundTrait;
 
     public function __construct(
         protected AuthServiceInterface $inner

@@ -7,8 +7,8 @@ enum AccountStatus: string
 {
     use EnumToArray;
 
-    case ACTIVE = 'active';
-    case FROZEN = 'frozen';
-    case SUSPENDED = 'suspended';
-    case CLOSED = 'closed';
+    case ACTIVE = 'نشط';
+    case FROZEN = 'مجمد';
+    case SUSPENDED = 'موقوف';
+    case CLOSED = 'مغلق';
 }

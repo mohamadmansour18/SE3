@@ -7,7 +7,7 @@ enum ScheduledTransactionFrequency: string
 {
     use EnumToArray;
 
-    case DAILY = 'daily';
-    case WEEKLY = 'weekly';
-    case MONTHLY = 'monthly';
+    case DAILY = 'يومي';
+    case WEEKLY = 'اسبوعي';
+    case MONTHLY = 'شهري';
 }

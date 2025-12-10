@@ -6,7 +6,7 @@ use App\Models\AuditLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-trait AspectTrait
+trait AroundTrait
 {
     protected function around(
         callable $before = null ,

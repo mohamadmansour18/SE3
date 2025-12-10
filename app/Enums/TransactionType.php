@@ -7,7 +7,7 @@ enum TransactionType: string
 {
     use EnumToArray;
 
-    case DEPOSIT = 'deposit';
-    case WITHDRAW = 'withdraw';
-    case TRANSFER = 'transfer';
+    case DEPOSIT = 'ياداع';
+    case WITHDRAW = 'سحب';
+    case TRANSFER = 'تحويل';
 }

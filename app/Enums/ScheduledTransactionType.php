@@ -7,7 +7,7 @@ enum ScheduledTransactionType: string
 {
     use EnumToArray;
 
-    case DEPOSIT = 'deposit';
-    case WITHDRAW = 'withdraw';
-    case TRANSFER = 'transfer';
+    case DEPOSIT = 'ايداع';
+    case WITHDRAW = 'سحب';
+    case TRANSFER = 'تحويل';
 }

@@ -24,6 +24,7 @@ class Transaction extends Model
 
     protected $casts = [
         'amount'=> 'decimal:2',
+        'executed_at' => 'datetime',
     ];
 
     public function fromAccount(): BelongsTo

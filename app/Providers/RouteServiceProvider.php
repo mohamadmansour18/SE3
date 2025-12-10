@@ -78,9 +78,9 @@ class RouteServiceProvider extends ServiceProvider
                 $max = config('rateLimits.manager' , 100);
                 return Limit::perMinute($max)->by($baseKey);
             }
-            if($user && $user->role === UserRole::OFFICER->value)
+            if($user && $user->role === UserRole::TELLER->value)
             {
-                $max = config('rateLimits.officer' , 75);
+                $max = config('rateLimits.teller' , 75);
                 return Limit::perMinute($max)->by($baseKey);
             }
             if($user && $user->role === UserRole::CITIZEN->value)

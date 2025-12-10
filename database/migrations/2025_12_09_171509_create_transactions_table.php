@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('performed_by_user_id')->constrained('users')->nullOnDelete();
+            $table->foreignId('performed_by_user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('name', 100);
             $table->enum('type' , [TransactionType::convertEnumToArray()])->nullable();
             $table->foreignId('from_account_id')->nullable()->constrained('accounts')->nullOnDelete();
             $table->foreignId('to_account_id')->nullable()->constrained('accounts')->nullOnDelete();

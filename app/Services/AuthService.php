@@ -57,7 +57,7 @@ class AuthService implements AuthServiceInterface
 
         if(!$user->is_active)
         {
-            throw new ApiException("تم قفل حسابك لاسباب تتعلق بسياسة الاستخدام ، يرجى مراجعة وزارة الاتصالات للاستفسار عن الحساب" , 422);
+            throw new ApiException("تم قفل حسابك لاسباب تتعلق بسياسة الاستخدام" , 422);
         }
 
         $maxAttempts  = 3;

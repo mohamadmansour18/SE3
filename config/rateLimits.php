@@ -5,6 +5,6 @@ return [
     'registerApi' => 3,
     'forgotPasswordApi' => 4,
     'manager'   => 100,
-    'officer'   => 75,
+    'teller'   => 75,
     'citizen'   => 10,
 ];
