@@ -15,6 +15,7 @@ class ScheduledTransaction extends Model
     protected $fillable = [
         'account_id',
         'to_account_id',
+        'name' ,
         'type',
         'amount',
         'frequency',

@@ -15,8 +15,9 @@ class Account extends Model
 
     protected $fillable = [
         'user_id',
+        'name' ,
         'account_number',
-        'account_type',
+        'type',
         'status',
         'balance',
         'opened_at',
@@ -27,7 +28,6 @@ class Account extends Model
         'balance' =>  'decimal:2',
     ];
 
-    // صاحب الحساب
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class , 'user_id' ,  'id');

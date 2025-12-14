@@ -43,6 +43,12 @@ Route::prefix('/v1/citizen')->group(function () {
             Route::post('/transactionHistory' , [TransactionController::class , 'getUserTransactions'])->middleware('Logging:transaction.citizen.history');
         });
 
+        Route::prefix('/services')->group(function () {
+            Route::post('/withdraw' , [TransactionController::class , 'withdraw'])->middleware('Logging:transaction.citizen.withdraw');
+            Route::post('/deposit' , [TransactionController::class , 'deposit'])->middleware('Logging:transaction.citizen.deposit');
+            Route::post('/transfer' , [TransactionController::class , 'transfer'])->middleware('Logging:transaction.citizen.transfer');
+            Route::post('/download' , [TransactionController::class , 'export'])->middleware('Logging:transaction.citizen.download');
+        });
         Route::get('/notification' , [NotificationController::class , 'getCitizenNotifications'])->middleware('Logging:show.citizen.notification');
     });
 });

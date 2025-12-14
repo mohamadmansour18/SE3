@@ -128,6 +128,10 @@ return [
         'governorate' => 'مكان الإقامة',
         'token' => 'رمز المصادقة',
         'national_number' => 'الرقم الوطني',
-
+        'account_id' => 'معرف الحساب',
+        'amount' => 'الكمية',
+        'to_account_number' => 'رقم حساب الوجهة',
+        'period' => 'الفترة الزمنية',
+        'file_type' => 'نوع الملف',
     ],
 ];
