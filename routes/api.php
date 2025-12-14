@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Audit\NotificationController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Transaction\ScheduledTransactionController;
@@ -51,6 +52,11 @@ Route::prefix('/v1/citizen')->group(function () {
             Route::post('/download' , [TransactionController::class , 'export'])->middleware('Logging:transaction.citizen.download');
             Route::post('/scheduled' , [ScheduledTransactionController::class , 'schedule'])->middleware('Logging:transaction.citizen.schedule');
         });
+
+        Route::prefix('/Account')->group(function () {
+            Route::post('/create' , [AccountController::class , 'openAccount'])->middleware('Logging:create.citizen.account');
+        });
+
         Route::get('/notification' , [NotificationController::class , 'getCitizenNotifications'])->middleware('Logging:show.citizen.notification');
     });
 });

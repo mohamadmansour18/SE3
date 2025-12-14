@@ -133,6 +133,8 @@ return [
         'to_account_number' => 'رقم حساب الوجهة',
         'period' => 'الفترة الزمنية',
         'file_type' => 'نوع الملف',
-        'scheduled_at' => 'توقيت الجدولة'
+        'scheduled_at' => 'توقيت الجدولة',
+        'initial_amount' => 'المبلغ الابتدائي' ,
+        'account_type' => 'نوع الحساب'
     ],
 ];
