@@ -14,13 +14,10 @@ class ScheduledTransaction extends Model
 
     protected $fillable = [
         'account_id',
-        'to_account_id',
         'name' ,
         'type',
         'amount',
-        'frequency',
-        'next_run_at',
-        'end_at',
+        'scheduled_at',
         'status',
     ];
 
@@ -33,8 +30,4 @@ class ScheduledTransaction extends Model
         return $this->belongsTo(Account::class, 'account_id');
     }
 
-    public function toAccount(): BelongsTo
-    {
-        return $this->belongsTo(Account::class, 'to_account_id');
-    }
 }

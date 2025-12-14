@@ -7,7 +7,7 @@ enum ScheduledTransactionStatus: string
 {
     use EnumToArray;
 
-    case ACTIVE = 'active';
-    case PAUSED = 'paused';
+    case PENDING = 'pending';
+    case EXECUTED = 'executed';
     case CANCELLED = 'cancelled';
 }

@@ -4,10 +4,10 @@ namespace App\Services;
 
 use App\Enums\AccountStatus;
 use App\Exceptions\ApiException;
-use App\Helpers\TextHelper;
 use App\Models\Account;
 use App\Models\Transaction;
 use App\Repositories\Account\AccountRepository;
+use App\Repositories\Transaction\ScheduledTransactionRepository;
 use App\Repositories\Transaction\TransactionRepository;
 use App\Services\Contracts\TransactionServiceInterface;
 use Carbon\Carbon;
@@ -24,6 +24,7 @@ class TransactionService implements TransactionServiceInterface
     public function __construct(
         private readonly TransactionRepository $transactionRepository,
         private readonly AccountRepository $accountRepository,
+        private readonly ScheduledTransactionRepository $scheduledTransactionRepository,
     ) {}
 
     public function getUserTransactions(int $userId, array $params): LengthAwarePaginator
@@ -261,5 +262,34 @@ class TransactionService implements TransactionServiceInterface
             'transfer' => 'تحويل',
             default    => $type,
         };
+    }
+
+    public function scheduleUserTransaction(int $userId, int $accountId, string $type, float $amount, string $scheduledAt, string $name): void
+    {
+        $account = $this->accountRepository->findUserAccountById($userId, $accountId);
+
+        if ($account->status !== AccountStatus::ACTIVE->value) {
+            throw new ApiException('لا يمكن جدولة عملية على حساب غير نشط', 422);
+        }
+
+        $scheduledAtCarbon = Carbon::parse($scheduledAt);
+
+        if($scheduledAtCarbon->isPast())
+        {
+            throw new ApiException('وقت الجدولة يجب أن يكون في المستقبل', 422);
+        }
+
+        $now = Carbon::now();
+        $maxDate = $now->copy()->addMonths(3);
+
+        if ($scheduledAtCarbon->greaterThan($maxDate)) {
+            throw new ApiException('وقت الجدولة لا يمكن أن يتجاوز 3 أشهر من تاريخ اليوم', 422);
+        }
+
+        if ($type === 'withdraw' && $account->balance < $amount) {
+            throw new ApiException('ليس لديك رصيد كافٍ لجدولة عملية السحب هذه', 422);
+        }
+
+        $this->scheduledTransactionRepository->createTransaction($accountId , $type , $name , $amount , $scheduledAtCarbon);
     }
 }
