@@ -135,6 +135,7 @@ return [
         'file_type' => 'نوع الملف',
         'scheduled_at' => 'توقيت الجدولة',
         'initial_amount' => 'المبلغ الابتدائي' ,
-        'account_type' => 'نوع الحساب'
+        'account_type' => 'نوع الحساب',
+        'status' => 'حالة الحساب'
     ],
 ];

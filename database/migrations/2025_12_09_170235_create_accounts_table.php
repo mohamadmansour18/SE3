@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('balance', 15, 2)->default(0);
             $table->timestamp('opened_at')->useCurrent();
             $table->timestamp('closed_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

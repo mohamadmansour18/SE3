@@ -5,6 +5,7 @@ namespace App\Repositories\Account;
 use App\Enums\AccountStatus;
 use App\Models\Account;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -56,5 +57,25 @@ class AccountRepository
 
            return $account->fresh();
         });
+    }
+
+    public function findAccountByUserId(int $userId): Collection|array
+    {
+        return Account::query()
+            ->where('user_id' , $userId)
+            ->get([ 'id' , 'name' , 'account_number' , 'description' , 'type' , 'status' , 'balance' , 'created_at']);
+    }
+
+    public function updateAccountFields(Account $account, array $attributes): Account
+    {
+        foreach (['name', 'description', 'status'] as $field) {
+            if (array_key_exists($field, $attributes)) {
+                $account->{$field} = $attributes[$field];
+            }
+        }
+
+        $account->save();
+
+        return $account;
     }
 }
