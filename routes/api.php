@@ -55,6 +55,9 @@ Route::prefix('/v1/citizen')->group(function () {
 
         Route::prefix('/Account')->group(function () {
             Route::post('/create' , [AccountController::class , 'openAccount'])->middleware('Logging:create.citizen.account');
+            Route::get('/index' , [AccountController::class , 'getAccounts'])->middleware('Logging:get.citizen.account');
+            Route::post('/update' , [AccountController::class , 'update'])->middleware('Logging:update.citizen.account');
+            Route::get('/forSelect' , [AccountController::class , 'getAccountForSelect']);
         });
 
         Route::get('/notification' , [NotificationController::class , 'getCitizenNotifications'])->middleware('Logging:show.citizen.notification');
@@ -72,7 +75,7 @@ Route::post('/refresh' , [UserController::class , 'refresh'])->middleware('jwt.r
 
 
 Route::get('/test-fcm', function (FirebaseNotificationService $fcm) {
-    \App\Events\FcmNotificationRequested::dispatch([3] , "الوووووو" , "مرحبا زعييييم");
+    \App\Events\NotificationRequested::dispatch([3] , "الوووووو" , "مرحبا زعييييم");
     return "تمت العملية بنجاح";
 //    try {
 //        $fcm->send(

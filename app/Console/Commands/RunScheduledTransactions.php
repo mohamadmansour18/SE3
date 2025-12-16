@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\ScheduledTransactionStatus;
-use App\Events\FcmNotificationRequested;
+use App\Events\NotificationRequested;
 use App\Models\ScheduledTransaction;
 use App\Services\TransactionService;
 use Carbon\Carbon;
@@ -106,7 +106,7 @@ class RunScheduledTransactions extends Command
                     $scheduled->status = ScheduledTransactionStatus::EXECUTED->value;
                     $scheduled->save();
 
-                    //FcmNotificationRequested::dispatch([$userId] , "نجاح عملية جدولة" , "تم تنفيذ عملية ال {$type} المجدولة والخاصة بك بنجاح");
+                    //NotificationRequested::dispatch([$userId] , "نجاح عملية جدولة" , "تم تنفيذ عملية ال {$type} المجدولة والخاصة بك بنجاح");
 
                     $this->info("Scheduled transaction #{$scheduled->id} executed successfully");
                     Log::channel('aspect')->info("Scheduled transaction #{$scheduled->id} executed successfully");

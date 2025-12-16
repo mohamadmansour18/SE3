@@ -21,7 +21,7 @@ class FirebaseNotificationService
         $this->messagingUrl = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
     }
 
-    public function send(string $title , string $body , array $tokens): array
+    public function send(string $title , string $body , array $tokens , array $data = []): array
     {
         if(empty($tokens))
         {
@@ -44,6 +44,10 @@ class FirebaseNotificationService
                     ],
                 ]
             ];
+
+            if (!empty($data)) {
+                $payload['message']['data'] = $data;
+            }
 
             $response = Http::withToken($accessToken)->acceptJson()->post($this->messagingUrl, $payload);
 

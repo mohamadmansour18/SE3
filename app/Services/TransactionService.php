@@ -9,6 +9,8 @@ use App\Models\Transaction;
 use App\Repositories\Account\AccountRepository;
 use App\Repositories\Transaction\ScheduledTransactionRepository;
 use App\Repositories\Transaction\TransactionRepository;
+use App\Services\Adapter\CsvTransactionAdapter;
+use App\Services\Adapter\PdfTransactionAdapter;
 use App\Services\Contracts\TransactionServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -25,6 +27,8 @@ class TransactionService implements TransactionServiceInterface
         private readonly TransactionRepository $transactionRepository,
         private readonly AccountRepository $accountRepository,
         private readonly ScheduledTransactionRepository $scheduledTransactionRepository,
+        private readonly PdfTransactionAdapter $pdfAdapter,
+        private readonly CsvTransactionAdapter $csvAdapter,
     ) {}
 
     public function getUserTransactions(int $userId, array $params): LengthAwarePaginator
@@ -136,9 +140,16 @@ class TransactionService implements TransactionServiceInterface
         Storage::disk('public')->makeDirectory('stats');
 
         try {
-            return $fileType === 'pdf'
-                ?  $this->generatePdf($account, $transactions, $fromDate, $toDate)
-                :  $this->generateCsv($account, $transactions, $fromDate, $toDate);
+            $exporter = match ($fileType)
+            {
+                'pdf' => $this->pdfAdapter,
+                'csv' => $this->csvAdapter,
+
+                default => throw new ApiException("نوع الملف غير صالح" , 422)
+            };
+
+            return $exporter->export($account, $transactions, $fromDate, $toDate);
+
         }catch(\Throwable $exception)
         {
             Log::error('PDF generation failed' , [
@@ -162,106 +173,6 @@ class TransactionService implements TransactionServiceInterface
         };
 
         return [$from , $to];
-    }
-
-    private function generatePdf(Account $account, $transactions, Carbon $fromDate, Carbon $toDate): array
-    {
-        $fileName = sprintf(
-            'transactions_%s_%s_%s.pdf',
-            $account->account_number ,
-            $fromDate->format('Ymd'),
-            $toDate->format('Ymd')
-        );
-
-        $relativePath = 'stats/' . $fileName;
-        $fullPath = Storage::disk('public')->path($relativePath);
-
-        $mpdfTemp = storage_path('app/mpdf-temp');
-        if (!File::exists($mpdfTemp)) {
-            File::makeDirectory($mpdfTemp, 0755, true);
-        }
-
-        $mpdf = new Mpdf([
-            'mode'              => 'utf-8',
-            'format'            => 'A4',
-            'directionality'    => 'rtl',
-            'autoLangToFont'    => true,
-            'autoScriptToLang'  => true,
-            'tempDir'           => $mpdfTemp,
-            'margin_top'        => 15,
-            'margin_bottom'     => 15,
-            'margin_left'       => 10,
-            'margin_right'      => 10,
-        ]);
-
-        $html = view('reports.transaction' , [
-            'account'      => $account,
-            'transactions' => $transactions,
-            'fromDate'     => $fromDate,
-            'toDate'       => $toDate,
-        ])->render();
-
-        $mpdf->WriteHTML($html);
-        $mpdf->Output($fullPath , Destination::FILE);
-
-        return [
-            'path' => $fullPath,
-            'download_name' => $fileName,
-        ];
-    }
-
-    private function generateCsv(Account $account, $transactions, Carbon $fromDate, Carbon $toDate): array
-    {
-        $fileName = sprintf(
-            'transactions_%s_%s_%s.csv',
-            $account->account_number,
-            $fromDate->format('Ymd'),
-            $toDate->format('Ymd')
-        );
-
-        $relativePath = 'stats/' . $fileName;
-        $fullPath     = Storage::disk('public')->path($relativePath);
-
-        $handle = fopen($fullPath, 'w');
-
-        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-        fputcsv($handle, [
-            'رقم المعاملة',
-            'نوع العملية',
-            'المبلغ',
-            'رقم حساب المصدر',
-            'رقم حساب الوجهة',
-            'تاريخ التنفيذ',
-        ]);
-
-        foreach ($transactions as $transaction) {
-            fputcsv($handle, [
-                $transaction->id,
-                $this->translateType($transaction->type),
-                $transaction->amount,
-                $transaction->fromAccount?->account_number,
-                $transaction->toAccount?->account_number,
-                $transaction->created_at->format('Y-m-d H:i'),
-            ]);
-        }
-
-        fclose($handle);
-
-        return [
-            'path'          => $fullPath,
-            'download_name' => $fileName,
-        ];
-    }
-
-    private function translateType(string $type): string
-    {
-        return match ($type) {
-            'deposit'  => 'إيداع',
-            'withdraw' => 'سحب',
-            'transfer' => 'تحويل',
-            default    => $type,
-        };
     }
 
     public function scheduleUserTransaction(int $userId, int $accountId, string $type, float $amount, string $scheduledAt, string $name): void

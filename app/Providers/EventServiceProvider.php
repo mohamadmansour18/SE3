@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\FcmNotificationRequested;
+use App\Events\NotificationRequested;
 use App\Listeners\SendFcmNotification;
 use App\Listeners\StoreFcmNotification;
 use Illuminate\Auth\Events\Registered;
@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        FcmNotificationRequested::class => [
+        NotificationRequested::class => [
             StoreFcmNotification::class,
             SendFcmNotification::class,
         ]
