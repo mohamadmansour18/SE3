@@ -26,7 +26,7 @@ class OpenAccountRequest extends FormRequest
             'name' => ['required' , 'string' , 'max:255'],
             'description' => ['required' , 'string' , 'max:512'],
             'account_type'   => ['required' , 'string' , 'in:جاري,توفير,قرض,استثماري'],
-            'initial_amount' => 'required|numeric|min:0.01',
+            'initial_amount' => 'required|numeric',
         ];
     }
 }

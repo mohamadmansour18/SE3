@@ -38,10 +38,10 @@ class AccountRepository
             ->first();
     }
 
-    public function createAccount(int $userId , string $accountType , string $name , string $description , float $amount): Account
+    public function createAccount(int $userId , string $accountType , string $name , string $description , float $amount , string $status): Account
     {
 
-        return DB::transaction(function () use ($userId, $accountType, $name, $description , $amount) {
+        return DB::transaction(function () use ($userId, $accountType, $name, $description , $amount , $status) {
            $lastNumber = Account::withTrashed()->lockForUpdate()->max('account_number');
            $nextNumber = $lastNumber ? $lastNumber + 1 : 1;
 
@@ -51,7 +51,7 @@ class AccountRepository
                'name'           => $name,
                'description'    => $description,
                'account_number' => $nextNumber,
-               'status'         => AccountStatus::ACTIVE->value,
+               'status'         => $status,
                'balance'        => $amount ,
            ]);
 

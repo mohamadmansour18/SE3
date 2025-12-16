@@ -106,7 +106,7 @@ class RunScheduledTransactions extends Command
                     $scheduled->status = ScheduledTransactionStatus::EXECUTED->value;
                     $scheduled->save();
 
-                    //NotificationRequested::dispatch([$userId] , "نجاح عملية جدولة" , "تم تنفيذ عملية ال {$type} المجدولة والخاصة بك بنجاح");
+                    NotificationRequested::dispatch([$userId] , "نجاح عملية جدولة" , "تم تنفيذ عملية ال {$type} المجدولة والخاصة بك بنجاح");
 
                     $this->info("Scheduled transaction #{$scheduled->id} executed successfully");
                     Log::channel('aspect')->info("Scheduled transaction #{$scheduled->id} executed successfully");

@@ -7,18 +7,30 @@ use App\Exceptions\ApiException;
 use App\Models\Account;
 use App\Repositories\Account\AccountRepository;
 use App\Services\Contracts\AccountServiceInterface;
+use App\Services\Strategy\AccountOpeningStrategyFactory;
 use Illuminate\Database\Eloquent\Collection;
 
 class AccountService implements AccountServiceInterface
 {
     public function __construct(
         private readonly AccountRepository $accountRepository,
+        private readonly AccountOpeningStrategyFactory $accountOpeningStrategyFactory,
     )
     {}
 
     public function openAccount(int $userId, string $accountType, string $name, string $description, float $initialAmount): Account
     {
-        return $this->accountRepository->createAccount($userId, $accountType, $name, $description, $initialAmount);
+        $strategy = $this->accountOpeningStrategyFactory->forType($accountType);
+
+        $result = $strategy->prepare(
+            $userId,
+            $accountType,
+            $name,
+            $description,
+            $initialAmount
+        );
+
+        return $this->accountRepository->createAccount($userId, $accountType, $name, $description, $result->initialStatus , $result->initialStatus);
     }
 
     public function getAccounts(int $userId): array|Collection

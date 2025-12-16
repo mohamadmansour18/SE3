@@ -11,6 +11,8 @@ use App\Repositories\Transaction\ScheduledTransactionRepository;
 use App\Repositories\Transaction\TransactionRepository;
 use App\Services\Adapter\CsvTransactionAdapter;
 use App\Services\Adapter\PdfTransactionAdapter;
+use App\Services\Chain_Of_Responsibility\TransactionContext;
+use App\Services\Chain_Of_Responsibility\TransactionRuleChainFactory;
 use App\Services\Contracts\TransactionServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -29,6 +31,7 @@ class TransactionService implements TransactionServiceInterface
         private readonly ScheduledTransactionRepository $scheduledTransactionRepository,
         private readonly PdfTransactionAdapter $pdfAdapter,
         private readonly CsvTransactionAdapter $csvAdapter,
+        private readonly TransactionRuleChainFactory $transactionRuleChainFactory,
     ) {}
 
     public function getUserTransactions(int $userId, array $params): LengthAwarePaginator
@@ -55,15 +58,28 @@ class TransactionService implements TransactionServiceInterface
         $account = $this->accountRepository->findUserAccountById($userId, $accountId);
 
 
-        if($account->status !== AccountStatus::ACTIVE->value)
-        {
-            throw new ApiException("لا يمكن اجراء عملية سحب على حساب غير نشط" , 422);
-        }
+//        if($account->status !== AccountStatus::ACTIVE->value)
+//        {
+//            throw new ApiException("لا يمكن اجراء عملية سحب على حساب غير نشط" , 422);
+//        }
+//
+//        if($account->balance < $amount)
+//        {
+//            throw new ApiException("ليس لديك رصيد كافي لاتمام عملية السحب" , 422);
+//        }
 
-        if($account->balance < $amount)
-        {
-            throw new ApiException("ليس لديك رصيد كافي لاتمام عملية السحب" , 422);
-        }
+        $context = new TransactionContext(
+            userId:         $userId,
+            account:        $account,
+            amount:         $amount,
+            operationName:  $name,
+            operationType:  'withdraw',
+        );
+
+        $chain = $this->transactionRuleChainFactory->buildWithdrawChain();
+
+        $chain->check($context);
+
 
         return DB::transaction(function () use ($userId, $account, $amount, $name) {
             $this->accountRepository->decrementBalance($account, $amount);
@@ -76,10 +92,21 @@ class TransactionService implements TransactionServiceInterface
     {
         $account = $this->accountRepository->findUserAccountById($userId, $accountId);
 
-        if($account->status !== AccountStatus::ACTIVE->value)
-        {
-            throw new ApiException("لا يمكن اجراء عملية ايداع على حساب غير نشط" , 422);
-        }
+//        if($account->status !== AccountStatus::ACTIVE->value)
+//        {
+//            throw new ApiException("لا يمكن اجراء عملية ايداع على حساب غير نشط" , 422);
+//        }
+
+        $context = new TransactionContext(
+            userId:         $userId,
+            account:        $account,
+            amount:         $amount,
+            operationName:  $name,
+            operationType:  'deposit',
+        );
+
+        $chain = $this->transactionRuleChainFactory->buildDepositChain();
+        $chain->check($context);
 
         return DB::transaction(function () use ($userId, $account, $amount, $name) {
             $this->accountRepository->incrementBalance($account, $amount);
