@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Enums\AccountStatus;
+use App\Events\NotificationRequested;
 use App\Exceptions\ApiException;
+use App\Helpers\TextHelper;
 use App\Models\Account;
 use App\Models\Transaction;
 use App\Repositories\Account\AccountRepository;
@@ -140,6 +142,8 @@ class TransactionService implements TransactionServiceInterface
         {
             throw new ApiException("لا يمكن اجراء عملية تحويل لحساب غير نشط" , 422);
         }
+
+        NotificationRequested::dispatch([$toAccount->id] , "لديك عملية تحويل" , TextHelper::fixBidi("تم تحويل مبلغ {$amount} من الحساب {$fromAccount->account_number}"));
 
         return DB::transaction(function () use ($fromAccount , $toAccount , $userId , $amount, $name) {
 

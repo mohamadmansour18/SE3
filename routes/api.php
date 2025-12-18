@@ -75,13 +75,14 @@ Route::post('/refresh' , [UserController::class , 'refresh'])->middleware('jwt.r
 
 
 Route::get('/test-fcm', function (FirebaseNotificationService $fcm) {
-    \App\Events\NotificationRequested::dispatch([3] , "الوووووو" , "مرحبا زعييييم");
+    \App\Events\NotificationRequested::dispatch([1], "الوووووو", "مرحبا زعييييم");
     return "تمت العملية بنجاح";
+});
 //    try {
 //        $fcm->send(
 //            'Hello Obeda',
 //            'Test',
-//            ['feQ0xpsbSAS89BkAniZ-F8:APA91bFuSmS4SLeYZvzsOW2XTvMlFMPRm9od8T58CHOvzy9yucQzO1upEemIZN_5XEtxICcL8jKzAgq9mqimAbYsw_oRhVtrutRwmANsmA1ACnODnknqCNw']
+//            ['eP95fTm8S1yGUGYC32Cqyh:APA91bFvrpeTEbA26rPfAHQUhLDa7jc_-k7ASzHktBIilyTjfZZuLEq4kWely8HqnFYZ68bE7eMpAtreqIwbUJFLU3DFPcdPjOae0wlQrwAssfdGVQnFbQs']
 //        );
 //        return "تمت العملية بنجاح";
 //    }catch (\Exception $e)
@@ -91,7 +92,7 @@ Route::get('/test-fcm', function (FirebaseNotificationService $fcm) {
 //            'body' => $e->getMessage(),
 //        ], 422);
 //    }
-});
+//});
 /*
  * Route::get('/search', ...)
     ->middleware('throttle:30,1'); //max.minutes
