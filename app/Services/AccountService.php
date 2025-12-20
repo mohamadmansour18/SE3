@@ -30,7 +30,7 @@ class AccountService implements AccountServiceInterface
             $initialAmount
         );
 
-        return $this->accountRepository->createAccount($userId, $accountType, $name, $description, $result->initialStatus , $result->initialStatus);
+        return $this->accountRepository->createAccount($userId, $accountType, $name, $description, $result->initialBalance , $result->initialStatus);
     }
 
     public function getAccounts(int $userId): array|Collection

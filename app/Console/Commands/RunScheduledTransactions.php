@@ -8,6 +8,7 @@ use App\Models\ScheduledTransaction;
 use App\Services\TransactionService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class RunScheduledTransactions extends Command
@@ -92,8 +93,10 @@ class RunScheduledTransactions extends Command
                     if($type === 'سحب')
                     {
                         $this->transactionService->withdraw($userId , $accountId , $amount , $name);
+                        Cache::tags(["user:{$userId}", 'transactions'])->flush();
                     }elseif ($type === 'ايداع'){
                         $this->transactionService->deposit($userId , $accountId , $amount , $name);
+                        Cache::tags(["user:{$userId}", 'transactions'])->flush();
                     }else{
                         Log::warning('Unknown scheduled transaction type', [
                             'scheduled_transaction_id' => $scheduled->id,

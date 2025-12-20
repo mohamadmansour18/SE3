@@ -26,6 +26,8 @@ return new class extends Migration
             $table->timestamp('closed_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index('user_id', 'accounts_user_id_index');
         });
     }
 

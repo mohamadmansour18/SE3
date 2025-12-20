@@ -24,6 +24,8 @@ return new class extends Migration
             $table->enum('status' , [TransactionStatus::convertEnumToArray()])->default(TransactionStatus::PENDING->value);
             $table->timestamp('executed_at')->useCurrent();
             $table->timestamps();
+
+            $table->index(['performed_by_user_id', 'created_at'], 'transactions_user_created_at_index');
         });
     }
 
